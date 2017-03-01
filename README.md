@@ -15,3 +15,5 @@ LICENSE file for the current working directory that you are in.
     -y, --year <year>        The year the license is effective
 
 ```
+
+![Legit Demo](legit-demo.gif)
