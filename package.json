@@ -1,5 +1,5 @@
 {
-  "name": "legit",
+  "name": "@captainsafia/legit",
   "version": "1.0.0",
   "description": "Automatically add a license to a GitHub project",
   "main": "index.js",
