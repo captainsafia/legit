@@ -3,6 +3,14 @@
 legit is a command line application that allows you to automagically generate a
 LICENSE file for the current working directory that you are in.
 
+### Installation
+
+```
+npm install --global @captainsafia/legit
+```
+
+### Usage
+
 ```
   Usage: legit [options]
 
