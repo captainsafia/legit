@@ -25,3 +25,16 @@ npm install --global @captainsafia/legit
 ```
 
 ![Legit Demo](legit-demo.gif)
+
+### Available Licenses
+
+legit currently supports a limited subset of licenses, listed below. In order
+to add a license, submit a pull request that contains a template of the license
+inside the `licenses` directory with the strings `[user]` and `[year]` used to
+denote where thoe parameters should be inserted.
+
+#### Currently Supported Licenses
+- MIT (mit)
+- Mozilla Public License 2.0 (mpl2)
+- Apache License 2.0 (apache2)
+- GNU Affero General Public License 3.0 (agpl3)
