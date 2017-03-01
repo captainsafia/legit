@@ -27,10 +27,14 @@ if (program.license) {
   fs.createReadStream(licenseFile).pipe(fs.createWriteStream(cwd + '/LICENSE')); 
   fs.readFile(licenseFile, 'utf8', function (error, data) {
     if (error) console.log(error);
-    var result = data.replace('[user]', program.user).replace('[year]', program.year);
-    fs.writeFile(cwd + '/LICENSE', result, 'utf8', function(error) {
-      if (error) return console.log(error);
-    });
+    if (program.user && program.year) {
+      var result = data.replace('[user]', program.user).replace('[year]', program.year);
+      fs.writeFile(cwd + '/LICENSE', result, 'utf8', function(error) {
+        if (error) return console.log(error);
+      });
+    } else {
+      program.help();
+    }
   });
 } else {
   program.help();
