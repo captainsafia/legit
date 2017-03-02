@@ -41,3 +41,4 @@ Additionally, it allows to replace placeholders in the license text with command
 - make `license-placeholders.yml` url configurable
 - allow to resolve `license-placeholders.yml` with a file-system path
 - placeholders including `'` character don't work
+- Regexp support for license placeholders
