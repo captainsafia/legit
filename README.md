@@ -32,7 +32,7 @@ npm install --global @captainsafia/legit
 legit currently supports a limited subset of licenses, listed below. In order
 to add a license, submit a pull request that contains a template of the license
 inside the `licenses` directory with the strings `[user]` and `[year]` used to
-denote where thoe parameters should be inserted.
+denote where the parameters should be inserted.
 
 #### Currently Supported Licenses
 - MIT (mit)
