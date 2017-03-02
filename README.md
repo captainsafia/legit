@@ -41,3 +41,4 @@ denote where thoe parameters should be inserted.
 - GNU Affero General Public License 3.0 (agpl3)
 - ISC License (isc)
 - BSD 2-Clause License (bsd2clause)
+- Unlicense (unlicense)
