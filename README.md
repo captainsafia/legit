@@ -19,9 +19,10 @@ npm install --global @captainsafia/legit
     -h, --help               output usage information
     -V, --version            output the version number
     -a, --list-all           List installed licenses
-    -l, --license <license>  The license to include
+    -l, --license <license>  The license (SPDX ID) to include
     -u, --user <user>        The individual who owns the license
     -y, --year <year>        The year the license is effective
+    -d, --oneline <oneline>  One line to give the program name and a brief idea of what it does
 
 ```
 
@@ -29,14 +30,14 @@ npm install --global @captainsafia/legit
 
 ### Available Licenses
 
-legit currently supports a limited subset of licenses, listed below. In order
-to add a license, submit a pull request that contains a template of the license
-inside the `licenses` directory with the strings `[user]` and `[year]` used to
-denote where thoe parameters should be inserted.
+legit uses SPDX license IDs and definitions as a backend, therefore all [SPDX licenses](https://spdx.org/licenses/) are supported.
 
-#### Currently Supported Licenses
-- MIT (mit)
-- Mozilla Public License 2.0 (mpl2)
-- Apache License 2.0 (apache2)
-- GNU Affero General Public License 3.0 (agpl3)
-- ISC License (isc)
+Additionally, it allows to replace placeholders in the license text with command-line options; placeholders are defined by [license-placeholders.yml](license-placeholders.yml).
+
+### Known issues
+
+- placeholder list is hardcoded (`user`,`year`,`oneline`), should be parametric
+- add more items in [license-placeholders.yml](license-placeholders.yml)
+- make `license-placeholders.yml` url configurable
+- allow to resolve `license-placeholders.yml` with a file-system path
+- placeholders including `'` character don't work

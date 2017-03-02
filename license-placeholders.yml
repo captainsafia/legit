@@ -2,3 +2,7 @@ AGPL-3.0:
 - user: '<name of author>'
 - year: '<year>'
 - oneline: '<one line to give the programs name and a brief idea of what it does.>'
+
+Apache-2.0:
+- user: '[name of copyright owner]'
+- year: '[yyyy]'
