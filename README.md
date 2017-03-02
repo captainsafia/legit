@@ -19,10 +19,11 @@ npm install --global @captainsafia/legit
     -h, --help               output usage information
     -V, --version            output the version number
     -a, --list-all           List installed licenses
-    -l, --license <license>  The license (SPDX ID) to include
-    -u, --user <user>        The individual who owns the license
-    -y, --year <year>        The year the license is effective
-    -d, --oneline <oneline>  One line to give the program name and a brief idea of what it does
+    -l, --license            The license to include, as an SPDX License Identifier (mandatory)
+    -u, --user <user>        The individual who owns the IP (mandatory)
+    -y, --year <year>        The year the license is effective (optional, defaults to this year)
+    -n, --name <name>        A short name for the package (mandatory)
+    -w, --webpage <URL>      The URL of the home of the package e.g. on GitHub (optional, defaults to NONE)
 
 ```
 
