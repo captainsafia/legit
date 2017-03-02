@@ -40,11 +40,11 @@ if (program.license) {
     }
   });
 } else if (program.listAll) {
-    fs.readdir(__dirname + '/licenses/', function(err, items) {
-        for (var i=0; i<items.length; i++) {
-            console.log(items[i].slice(0, -4));
-        }
-    })
+  fs.readdir(licensesPath, function (err, items) {
+    for (var i = 0; i < items.length; i++) {
+      console.log(items[i]);
+    }
+  })
 } else {
   program.help();
 }
