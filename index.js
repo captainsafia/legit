@@ -9,7 +9,7 @@ var yaml = require('node-yaml');
 var replaceAll = require("replaceall");
 
 // Easily switch on/off debugging statements
-var isDebugMode = true;
+var isDebugMode = false;
 console.debug = function(args) {
   if (isDebugMode) {
     console.log(args);
