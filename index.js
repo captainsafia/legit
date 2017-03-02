@@ -69,20 +69,30 @@ if (program.license) {
   // Replace placeholders
   parsedLicenseText = licenseText;
   placeholders = licensePlaceholders[program.license];
-  if (placeholders) {
-    placeholders.forEach(function(placeholder){
-      Object.keys(placeholder).forEach(function(placeholderKey) {
-        var placeholderOldValue = placeholder[placeholderKey];
-        var placeholderNewValue = program[placeholderKey];
-        console.debug("placeholder:");
-        console.debug("key: " + placeholderKey);
-        console.debug("old value: " + placeholderOldValue);
-        console.debug("new value: " + placeholderNewValue);
 
-        parsedLicenseText = parsedLicenseText.replace(placeholderOldValue, placeholderNewValue);
-      });
-    });
+  // Define default license header
+  if (!placeholders) {
+    parsedLicenseText = "Copyright (c) [year] [user]\n\n"+parsedLicenseText;
+    placeholders = [{
+      "user": '[user]',
+      "year": '[year]'
+    }]
   }
+
+  console.log("placeholders: "+require('util').inspect(placeholders));
+
+  placeholders.forEach(function(placeholder){
+    Object.keys(placeholder).forEach(function(placeholderKey) {
+      var placeholderOldValue = placeholder[placeholderKey];
+      var placeholderNewValue = program[placeholderKey];
+      console.debug("placeholder:");
+      console.debug("key: " + placeholderKey);
+      console.debug("old value: " + placeholderOldValue);
+      console.debug("new value: " + placeholderNewValue);
+
+      parsedLicenseText = parsedLicenseText.replace(placeholderOldValue, placeholderNewValue);
+    });
+  });
 
   // Write license to file
   fs.writeFile(cwd + '/LICENSE', parsedLicenseText, 'utf8', function (error) {

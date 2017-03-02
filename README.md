@@ -36,6 +36,18 @@ Additionally, it allows to replace placeholders in the license text with command
 
 - [AGPL-3.0](https://spdx.org/licenses/AGPL-3.0.html)
 - [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html)
+- [BSD-2-Clause](https://spdx.org/licenses/BSD-2-Clause.html)
+- [ISC](https://spdx.org/licenses/ISC.html)
+- [MIT](https://spdx.org/licenses/MIT.html)
+- [MPL-2.0](https://spdx.org/licenses/MPL-2.0.html)
+- [Unlicense](https://spdx.org/licenses/Unlicense.html)
+
+If no placeholders are available, legit will prepend the following license header:
+```
+Copyright (c) [year] [user]
+
+
+```
 
 ### Known issues
 
