@@ -15,6 +15,7 @@ function validateLicense(license) {
 program
   .version('1.0.0')
   .usage('[options]')
+  .option('-a, --list-all', 'List installed licenses')
   .option('-l, --license <license>', 'The license to include', validateLicense)
   .option('-u, --user <user>', 'The individual who owns the license')
   .option('-y, --year <year>', 'The year the license is effective')
@@ -36,6 +37,12 @@ if (program.license) {
       program.help();
     }
   });
+} else if (program.listAll) {
+    fs.readdir(__dirname + '/licenses/', function(err, items) {
+        for (var i=0; i<items.length; i++) {
+            console.log(items[i].slice(0, -4));
+        }
+    })
 } else {
   program.help();
 }
