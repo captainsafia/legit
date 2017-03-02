@@ -2,9 +2,11 @@
 
 var fs = require('fs');
 var program = require('commander');
+const licensesPath = __dirname + '/licenses/';
 
 function validateLicense(license) {
-  const licenses = ['mit', 'apache2', 'mpl2', 'agpl3'];
+  license = license.toLowerCase();
+  const licenses = fs.readdirSync(licensesPath);
   if (licenses.indexOf(license) > -1) {
     return license;
   } else {
@@ -23,13 +25,12 @@ program
 
 if (program.license) {
   const cwd = process.cwd();
-  const licenseFile = __dirname + '/licenses/' + program.license + '.txt';
-  fs.createReadStream(licenseFile).pipe(fs.createWriteStream(cwd + '/LICENSE')); 
+  const licenseFile = licensesPath + program.license;
   fs.readFile(licenseFile, 'utf8', function (error, data) {
     if (error) console.log(error);
     if (program.user && program.year) {
       var result = data.replace('[user]', program.user).replace('[year]', program.year);
-      fs.writeFile(cwd + '/LICENSE', result, 'utf8', function(error) {
+      fs.writeFile(cwd + '/LICENSE', result, 'utf8', function (error) {
         if (error) return console.log(error);
       });
     } else {
