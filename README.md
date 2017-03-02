@@ -39,3 +39,4 @@ denote where thoe parameters should be inserted.
 - Mozilla Public License 2.0 (mpl2)
 - Apache License 2.0 (apache2)
 - GNU Affero General Public License 3.0 (agpl3)
+- ISC License
