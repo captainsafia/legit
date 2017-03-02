@@ -27,19 +27,21 @@ program
 var license = program.license;
 var user = program.user;
 
-try {
-  const packageJson = require(path.join(process.cwd(), 'package.json'));
-  if (!license && packageJson.license) license = packageJson.license.toLowerCase();
-  
-  if (!user && packageJson.author) {
-    if (typeof packageJson.author === 'string') {
-      user = packageJson.author.replace(/<.+>/, '').replace(/\(.+\)/, '').trim();
-    } else if (typeof packageJson.author === 'object' && packageJson.author.name) {
-      user = packageJson.author.name;
+if (!license || !user) {
+  try {
+    const packageJson = require(path.join(process.cwd(), 'package.json'));
+    if (!license && packageJson.license) license = packageJson.license.toLowerCase();
+    
+    if (!user && packageJson.author) {
+      if (typeof packageJson.author === 'string') {
+        user = packageJson.author.replace(/<.+>/, '').replace(/\(.+\)/, '').trim();
+      } else if (typeof packageJson.author === 'object' && packageJson.author.name) {
+        user = packageJson.author.name;
+      }
     }
+  } catch (e) {
+    // Couldn't find package.json in current directory, nothing to do
   }
-} catch (e) {
-  // Couldn't find package.json in current directory, nothing to do
 }
 
 if (license) {
