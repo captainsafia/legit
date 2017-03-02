@@ -32,7 +32,10 @@ npm install --global @captainsafia/legit
 
 legit uses SPDX license IDs and definitions as a backend, therefore all [SPDX licenses](https://spdx.org/licenses/) are supported.
 
-Additionally, it allows to replace placeholders in the license text with command-line options; placeholders are defined by [license-placeholders.yml](license-placeholders.yml).
+Additionally, it allows to replace placeholders in the license text with command-line options; placeholders are defined by [license-placeholders.yml](license-placeholders.yml):
+
+- [AGPL-3.0](https://spdx.org/licenses/AGPL-3.0.html)
+- [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html)
 
 ### Known issues
 
