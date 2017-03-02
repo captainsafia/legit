@@ -18,6 +18,7 @@ npm install --global @captainsafia/legit
 
     -h, --help               output usage information
     -V, --version            output the version number
+    -a, --list-all           List installed licenses
     -l, --license <license>  The license to include
     -u, --user <user>        The individual who owns the license
     -y, --year <year>        The year the license is effective
