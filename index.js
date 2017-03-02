@@ -1,6 +1,7 @@
 #! /usr/bin/env node
 
 var fs = require('fs');
+var path = require('path');
 var program = require('commander');
 const licensesPath = __dirname + '/licenses/';
 
@@ -23,14 +24,31 @@ program
   .option('-y, --year <year>', 'The year the license is effective')
   .parse(process.argv);
 
+var license = program.license;
+var user = program.user;
 
-if (program.license) {
+try {
+  const packageJson = require(path.join(process.cwd(), 'package.json'));
+  if (!license && packageJson.license) license = packageJson.license.toLowerCase();
+  
+  if (!user && packageJson.author) {
+    if (typeof packageJson.author === 'string') {
+      user = packageJson.author.replace(/<.+>/, '').replace(/\(.+\)/, '').trim();
+    } else if (typeof packageJson.author === 'object' && packageJson.author.name) {
+      user = packageJson.author.name;
+    }
+  }
+} catch (e) {
+  // Couldn't find package.json in current directory, nothing to do
+}
+
+if (license) {
   const cwd = process.cwd();
-  const licenseFile = licensesPath + program.license;
+  const licenseFile = licensesPath + license;
   fs.readFile(licenseFile, 'utf8', function (error, data) {
     if (error) console.log(error);
-    if (program.user && program.year) {
-      var result = data.replace('[user]', program.user).replace('[year]', program.year);
+    if (user && program.year) {
+      var result = data.replace('[user]', user).replace('[year]', program.year);
       fs.writeFile(cwd + '/LICENSE', result, 'utf8', function (error) {
         if (error) return console.log(error);
       });
