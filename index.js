@@ -29,8 +29,9 @@ if (program.license) {
   const licenseFile = licensesPath + program.license;
   fs.readFile(licenseFile, 'utf8', function (error, data) {
     if (error) console.log(error);
-    if (program.user && program.year) {
-      var result = data.replace('[user]', program.user).replace('[year]', program.year);
+    if (program.user) {
+      var year = program.year || new Date().getFullYear();
+      var result = data.replace('[user]', program.user).replace('[year]', year);
       fs.writeFile(cwd + '/LICENSE', result, 'utf8', function (error) {
         if (error) return console.log(error);
       });
