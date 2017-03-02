@@ -37,9 +37,7 @@ Additionally, it allows to replace placeholders in the license text with command
 
 ### Known issues
 
-- placeholder list is hardcoded (`user`,`year`,`oneline`), should be parametric
+- placeholder list is hardcoded (`user`,`year`,`name`), should be parametric
 - add more items in [license-placeholders.yml](license-placeholders.yml)
-- make `license-placeholders.yml` url configurable
-- allow to resolve `license-placeholders.yml` with a file-system path
 - placeholders including `'` character don't work
 - Regexp support for license placeholders

@@ -3,6 +3,7 @@
 var fs = require('fs');
 var program = require('commander');
 var spdxLicenses = require('spdx-licenses');
+var spdxLicenseIds = require('spdx-license-ids');
 var htmlToText = require('html-to-text');
 var request = require('sync-request');
 var yaml = require('node-yaml');
@@ -19,17 +20,13 @@ console.debug = function(args) {
 function validateLicense(license) {
   spdxLicense = spdxLicenses.spdx(license);
   if (spdxLicense) {
-    console.debug('Found SPDX License');
-    console.debug('id : ' + spdxLicense.id);
-    console.debug('name : ' + spdxLicense.name);
+    console.debug('Found SPDX License: ' + spdxLicense.id + ' (' + spdxLicense.name + ')');
   } else {
     console.error("Couldn't resolve license on SPDX; please refer to https://spdx.org/licenses");
     process.exit(1);
   }
   return spdxLicense.id;
 }
-
-console.debug("Starting...");
 
 program
   .version('1.0.0')
@@ -42,9 +39,8 @@ program
   .option('-w, --webpage <URL>', 'The URL of the home of the package e.g. on GitHub (optional, defaults to NONE)')
   .parse(process.argv);
 
-
 if (program.license && program.user && program.name) {
-  const cwd   = process.cwd();
+  const cwd = process.cwd();
   program.year    = program.year    || (new Date().getFullYear()).toString();
   program.webpage = program.webpage || "NONE";  // See https://spdx.org/spdx-specification-21-web-version#h.3o7alnk
 
@@ -57,7 +53,7 @@ if (program.license && program.user && program.name) {
   // Convert the content of the <div class="license-text"> tag to text, and drop the rest
   var licenseText = htmlToText.fromString(licenseHtml, {
     baseElement: 'div.license-text'
-  });
+  }) + '\n';
   console.debug('Parsed license text from HTML:\n' + licenseText);
 
   // Write LICENSE
@@ -112,8 +108,9 @@ if (program.license && program.user && program.name) {
         }});
     }});
 } else if (program.listAll) {
-  /* TODO: spdx-licenses currently doesn't provide a way to list all known licenses */
-  console.log("Not yet implemented, sorry.  Please see https://spdx.org/licenses/ instead.");
+  spdxLicenseIds.sort().forEach(function(spdxLicenseId) {
+    console.log(spdxLicenseId);
+  });
 } else {
   program.help();
 }
