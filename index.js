@@ -30,7 +30,7 @@ var user = program.user;
 if (!license || !user) {
   try {
     const packageJson = require(path.join(process.cwd(), 'package.json'));
-    if (!license && packageJson.license) license = packageJson.license.toLowerCase();
+    if (!license && packageJson.license) license = packageJson.license;
     
     if (!user && packageJson.author) {
       if (typeof packageJson.author === 'string') {
