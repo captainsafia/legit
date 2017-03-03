@@ -20,8 +20,9 @@
   "dependencies": {
     "commander": "^2.9.0",
     "spdx-licenses": "^0.0.3",
-    "html-to-text": "3.2.0",
+    "spdx-license-ids": "2.0.1",
     "sync-request": "4.0.1",
-    "node-yaml": "3.0.3"
+    "node-yaml": "3.0.3",
+    "replaceall": "0.1.6"
   }
 }

@@ -1,39 +1,27 @@
 #! /usr/bin/env node
 
-// TODO - make it configurable
-var licensePlaceholdersUrl = "https://raw.githubusercontent.com/maoo/legit/spdx-backend/license-placeholders.yml";
-
 var fs = require('fs');
 var program = require('commander');
 var spdxLicenses = require('spdx-licenses');
-var htmlToText = require('html-to-text');
+var spdxLicenseIds = require('spdx-license-ids');
 var request = require('sync-request');
 var yaml = require('node-yaml');
+var replaceAll = require("replaceall");
 
 // Easily switch on/off debugging statements
 var isDebugMode = false;
 console.debug = function(args) {
-  if (isDebugMode){
+  if (isDebugMode) {
     console.log(args);
   }
 }
 
-// Load license placeholders
-var phRes = request('GET', licensePlaceholdersUrl);
-var licensePlaceholdersRaw = phRes.getBody();
-
-console.debug("license placeholders raw: "+licensePlaceholdersRaw);
-var licensePlaceholders = yaml.parse(licensePlaceholdersRaw);
-console.debug("license placeholders: "+licensePlaceholders);
-
 function validateLicense(license) {
   spdxLicense = spdxLicenses.spdx(license);
   if (spdxLicense) {
-    console.log('Found SPDX License');
-    console.log('id : '+spdxLicense.id);
-    console.log('name : '+spdxLicense.name);
+    console.debug('Found SPDX License: ' + spdxLicense.id + ' (' + spdxLicense.name + ')');
   } else {
-    console.error("Couldn't resolve license on SPDX; please refer to https://spdx.org/licenses");
+    console.error('Unknown SPDX license identifier ' + license + '; please refer to https://spdx.org/licenses');
     process.exit(1);
   }
   return spdxLicense.id;
@@ -42,61 +30,85 @@ function validateLicense(license) {
 program
   .version('1.0.0')
   .usage('[options]')
-  .option('-l, --license <license>', 'The license to include', validateLicense)
-  .option('-u, --user <user>', 'The individual who owns the license')
-  .option('-y, --year <year>', 'The year the license is effective')
-  .option('-d, --oneline <oneline>', 'One line to give the program name and a brief idea of what it does')
+  .option('-a, --list-all', 'List all SPDX license identifiers')
+  .option('-l, --license <license>', 'The license to include, as an SPDX license identifier (mandatory)', validateLicense)
+  .option('-u, --user <user>', 'The individual who owns the IP (mandatory)')
+  .option('-y, --year <year>', 'The year the license is effective (optional, defaults to this year)')
+  .option('-n, --name <name>', 'A short name of the package (mandatory)')
+  .option('-w, --webpage <URL>', 'The URL of the home of the package e.g. on GitHub (optional, defaults to NONE)')
   .parse(process.argv);
 
-
-if (program.license) {
+if (program.license && program.user && program.name) {
   const cwd = process.cwd();
-  var year = program.year || new Date().getFullYear();
-  var licenseUrl = 'https://spdx.org/licenses/'+program.license + '.html';
 
-  // Fetch SPDX html page
-  var res = request('GET', licenseUrl);
-  var licenseHtml = res.getBody();
-  //console.debug('Resolved SPDX license URL ' + licenseUrl);
-  //console.debug('Fetched license HTML ' + licenseHtml);
+  // Populate defaults, if needed
+  program.year    = program.year    || (new Date().getFullYear()).toString();
+  program.webpage = program.webpage || "NONE";  // See https://spdx.org/spdx-specification-21-web-version#h.3o7alnk
 
-  // Only take <div class="license-text"> element, skip the rest
-  var licenseText = htmlToText.fromString(licenseHtml, {
-    baseElement: 'div.license-text'
-  });
-  //console.debug('Parsed license text from HTML' + licenseText);
+  // Fetch license text from official SPDX license list on GitHub
+  var licenseUrl = 'https://raw.githubusercontent.com/spdx/license-list/master/' + program.license + '.txt';
+  var licenseText = request('GET', licenseUrl).getBody().toString('utf8');
 
-  // Replace placeholders
-  parsedLicenseText = licenseText;
-  placeholders = licensePlaceholders[program.license];
+  // Write LICENSE file
+  fs.readFile(__dirname + '/license-placeholders.yml', 'utf8', function (error, data) {
+    if (error) {
+      console.log(error);
+      process.exit(1);
+    } else {
+      // Replace placeholders them in the license text
+      console.debug('license placeholders raw:\n' + data);
+      var licensePlaceholders = yaml.parse(data);
 
-  // Define default license header
-  if (!placeholders) {
-    parsedLicenseText = "Copyright (c) [year] [user]\n\n"+parsedLicenseText;
-    placeholders = [{
-      "user": '[user]',
-      "year": '[year]'
-    }]
-  }
+      var parsedLicenseText = licenseText;
 
-  console.log("placeholders: "+require('util').inspect(placeholders));
+      placeholders = licensePlaceholders[program.license];
 
-  placeholders.forEach(function(placeholder){
-    Object.keys(placeholder).forEach(function(placeholderKey) {
-      var placeholderOldValue = placeholder[placeholderKey];
-      var placeholderNewValue = program[placeholderKey];
-      console.debug("placeholder:");
-      console.debug("key: " + placeholderKey);
-      console.debug("old value: " + placeholderOldValue);
-      console.debug("new value: " + placeholderNewValue);
+      // Define default license header
+      if (!placeholders) {
+        parsedLicenseText = "Copyright (c) [year] [user]\n\n"+parsedLicenseText;
+        placeholders = [{
+          "user": '[user]',
+          "year": '[year]'
+        }]
+      }
 
-      parsedLicenseText = parsedLicenseText.replace(placeholderOldValue, placeholderNewValue);
-    });
-  });
+      placeholders.forEach(function(placeholder) {
+        Object.keys(placeholder).forEach(function(placeholderKey) {
+          var placeholderOldValue = placeholder[placeholderKey];
+          var placeholderNewValue = program[placeholderKey];
+          console.debug('Replacing ' + placeholderOldValue + ' with ' + placeholderNewValue + ' in LICENSE text');
 
-  // Write license to file
-  fs.writeFile(cwd + '/LICENSE', parsedLicenseText, 'utf8', function (error) {
-    if (error) return console.error(error);
+          parsedLicenseText = replaceAll(placeholderOldValue, placeholderNewValue, parsedLicenseText);
+        });
+      });
+
+      // Write content
+      fs.writeFile(cwd + '/LICENSE', parsedLicenseText, 'utf8', function (error) {
+        if (error) {
+          console.error(error);
+          process.exit(1);
+        }})}});
+
+  // Write LICENSE.spdx file
+  fs.readFile(__dirname + "/LICENSE.spdx.template", 'utf8', function (error, data) {
+    if (error) {
+      console.log(error);
+      process.exit(1);
+    } else {
+      var spdxLicenseText = data;
+      spdxLicenseText = replaceAll('[user]',                    program.user,    spdxLicenseText);
+      spdxLicenseText = replaceAll('[name]',                    program.name,    spdxLicenseText);
+      spdxLicenseText = replaceAll('[package-home-page]',       program.webpage, spdxLicenseText);
+      spdxLicenseText = replaceAll('[spdx-license-identifier]', program.license, spdxLicenseText);
+      fs.writeFile(cwd + '/LICENSE.spdx', spdxLicenseText, 'utf8', function (error) {
+        if (error) {
+          console.error(error);
+          process.exit(1);
+        }});
+    }});
+} else if (program.listAll) {
+  spdxLicenseIds.sort().forEach(function(spdxLicenseId) {
+    console.log(spdxLicenseId);
   });
 } else {
   program.help();
