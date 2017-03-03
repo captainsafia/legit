@@ -4,7 +4,6 @@ var fs = require('fs');
 var program = require('commander');
 var spdxLicenses = require('spdx-licenses');
 var spdxLicenseIds = require('spdx-license-ids');
-var htmlToText = require('html-to-text');
 var request = require('sync-request');
 var yaml = require('node-yaml');
 var replaceAll = require("replaceall");
@@ -22,7 +21,7 @@ function validateLicense(license) {
   if (spdxLicense) {
     console.debug('Found SPDX License: ' + spdxLicense.id + ' (' + spdxLicense.name + ')');
   } else {
-    console.error("Couldn't resolve license on SPDX; please refer to https://spdx.org/licenses");
+    console.error('Unknown SPDX license identifier ' + license + '; please refer to https://spdx.org/licenses');
     process.exit(1);
   }
   return spdxLicense.id;
@@ -31,8 +30,8 @@ function validateLicense(license) {
 program
   .version('1.0.0')
   .usage('[options]')
-  .option('-a, --list-all', 'List all SPDX License Identifiers')
-  .option('-l, --license <license>', 'The license to include, as an SPDX License Identifier (mandatory)', validateLicense)
+  .option('-a, --list-all', 'List all SPDX license identifiers')
+  .option('-l, --license <license>', 'The license to include, as an SPDX license identifier (mandatory)', validateLicense)
   .option('-u, --user <user>', 'The individual who owns the IP (mandatory)')
   .option('-y, --year <year>', 'The year the license is effective (optional, defaults to this year)')
   .option('-n, --name <name>', 'A short name of the package (mandatory)')
@@ -41,56 +40,48 @@ program
 
 if (program.license && program.user && program.name) {
   const cwd = process.cwd();
+
+  // Populate defaults, if needed
   program.year    = program.year    || (new Date().getFullYear()).toString();
   program.webpage = program.webpage || "NONE";  // See https://spdx.org/spdx-specification-21-web-version#h.3o7alnk
 
-  var licenseUrl = 'https://spdx.org/licenses/' + program.license + '.html';
+  // Fetch license text from official SPDX license list on GitHub
+  var licenseUrl = 'https://raw.githubusercontent.com/spdx/license-list/master/' + program.license + '.txt';
+  var licenseText = request('GET', licenseUrl).getBody().toString('utf8');
 
-  // Fetch license text from SPDX license list (in HTML format)
-  var res = request('GET', licenseUrl);
-  var licenseHtml = res.getBody();
-
-  // Convert the content of the <div class="license-text"> tag to text, and drop the rest
-  var licenseText = htmlToText.fromString(licenseHtml, {
-    baseElement: 'div.license-text'
-  }) + '\n';
-  console.debug('Parsed license text from HTML:\n' + licenseText);
-
-  // Write LICENSE
-  fs.readFile(__dirname + "/license-placeholders.yml", 'utf8', function (error, data) {
+  // Write LICENSE file
+  fs.readFile(__dirname + '/license-placeholders.yml', 'utf8', function (error, data) {
     if (error) {
       console.log(error);
       process.exit(1);
     } else {
-      console.debug("license placeholders raw:\n" + data);
+      // Replace placeholders them in the license text
+      console.debug('license placeholders raw:\n' + data);
       var licensePlaceholders = yaml.parse(data);
-      console.debug("license placeholders:\n" + licensePlaceholders);
 
-      // Replace placeholders
       var parsedLicenseText = licenseText;
+
       placeholders = licensePlaceholders[program.license];
       if (placeholders) {
         placeholders.forEach(function(placeholder) {
           Object.keys(placeholder).forEach(function(placeholderKey) {
             var placeholderOldValue = placeholder[placeholderKey];
             var placeholderNewValue = program[placeholderKey];
-            console.debug("placeholder:");
-            console.debug("key: " + placeholderKey);
-            console.debug("old value: " + placeholderOldValue);
-            console.debug("new value: " + placeholderNewValue);
+            console.debug('Replacing ' + placeholderOldValue + ' with ' + placeholderNewValue + ' in LICENSE text');
 
             parsedLicenseText = replaceAll(placeholderOldValue, placeholderNewValue, parsedLicenseText);
           });
         });
       }
 
+      // Write content
       fs.writeFile(cwd + '/LICENSE', parsedLicenseText, 'utf8', function (error) {
         if (error) {
           console.error(error);
           process.exit(1);
         }})}});
 
-  // Write LICENSE.spdx
+  // Write LICENSE.spdx file
   fs.readFile(__dirname + "/LICENSE.spdx.template", 'utf8', function (error, data) {
     if (error) {
       console.log(error);
