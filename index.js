@@ -34,7 +34,7 @@ program
   .option('-l, --license <license>', 'The license to include, as an SPDX license identifier (mandatory)', validateLicense)
   .parse(process.argv);
 
-console.log(program.args);
+console.debug(program.args);
 
 if (program.license) {
   const cwd = process.cwd();
@@ -83,7 +83,7 @@ if (program.license) {
           var placeholderToken = placeholderItem[placeholderKey];
           var placeholderValue = placeholders[placeholderKey];
           console.debug('Replacing ' + placeholderToken + ' with ' + placeholderValue + ' in LICENSE text');
-          if (placeholderValue && parsedLicenseText.indexOf(placeholderToken) > -1) {
+          if (placeholderValue) {
             parsedLicenseText = replaceAll(placeholderToken, placeholderValue, parsedLicenseText);
           } else {
             console.log("WARNING! Couldn't read placeholder '" + placeholderToken + "' from command-line params");
@@ -108,7 +108,7 @@ if (program.license) {
       Object.keys(placeholders).forEach(function(placeholderKey) {
         var placeholderValue = placeholders[placeholderKey];
         var placeholderToken = '[' + placeholderKey + ']';
-        if (placeholderValue && spdxLicenseText.indexOf(placeholderToken) > -1) {
+        if (placeholderValue) {
           spdxLicenseText = replaceAll(placeholderToken, placeholderValue, spdxLicenseText);
         } else {
           console.log("WARNING! Couldn't read placeholder '" + placeholderKey + "' from command-line params");
