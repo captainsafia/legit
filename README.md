@@ -28,7 +28,7 @@ npm install --global @captainsafia/legit
 ### Example
 ```
 mkdir /tmp/test ; cd $_
-legit -l Apache-2.0 year=2001 user=maoo name=legit package-home-page=https://github.com/maoo/legit
+legit -l Apache-2.0 year=2001 user=maoo name=legit webpage=https://github.com/maoo/legit
 ```
 
 If not `year` is the defined, the current one is used.
