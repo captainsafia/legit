@@ -82,7 +82,7 @@ if (program.license) {
         Object.keys(placeholderItem).forEach(function(placeholderKey) {
           var placeholderToken = placeholderItem[placeholderKey];
           var placeholderValue = placeholders[placeholderKey];
-          console.log('Replacing ' + placeholderToken + ' with ' + placeholderValue + ' in LICENSE text');
+          console.debug('Replacing ' + placeholderToken + ' with ' + placeholderValue + ' in LICENSE text');
           if (placeholderValue && parsedLicenseText.indexOf(placeholderToken) > -1) {
             parsedLicenseText = replaceAll(placeholderToken, placeholderValue, parsedLicenseText);
           } else {
