@@ -12,33 +12,52 @@ npm install --global @captainsafia/legit
 ### Usage
 
 ```
-  Usage: legit [options]
+  Usage: legit [options] [placeholders]
 
   Options:
 
     -h, --help               output usage information
     -V, --version            output the version number
     -a, --list-all           List installed licenses
-    -l, --license <license>  The license to include
-    -u, --user <user>        The individual who owns the license
-    -y, --year <year>        The year the license is effective
+    -l, --license            The license to include, as an SPDX License Identifier (mandatory)
+
+  Placeholders:
+    <key>=<value>
+```
+
+### Example
+```
+mkdir /tmp/test ; cd $_
+legit -l Apache-2.0 year=2001 user=maoo name=legit webpage=https://github.com/maoo/legit
+```
+
+If not `year` is the defined, the current one is used.
+
+Placeholder keys are resolved against [license-placeholders.yml](license-placeholders.yml) definition, depending on the license in use.
+
+If no placeholders configuration is available for the requested license, legit will prepend the following license header:
+```
+Copyright (c) [year] [user]
+
 
 ```
 
-![Legit Demo](legit-demo.gif)
+### Supported Licenses
 
-### Available Licenses
+legit uses SPDX license IDs and definitions as a backend, therefore all [SPDX licenses](https://spdx.org/licenses/) are supported.
 
-legit currently supports a limited subset of licenses, listed below. In order
-to add a license, submit a pull request that contains a template of the license
-inside the `licenses` directory with the strings `[user]` and `[year]` used to
-denote where the parameters should be inserted.
+[license-placeholders.yml](license-placeholders.yml) defines placeholder mappings for the following licenses:
 
-#### Currently Supported Licenses
-- MIT (mit)
-- Mozilla Public License 2.0 (mpl2)
-- Apache License 2.0 (apache2)
-- GNU Affero General Public License 3.0 (agpl3)
-- ISC License (isc)
-- BSD 2-Clause License (bsd2clause)
-- Unlicense (unlicense)
+- [AGPL-3.0](https://spdx.org/licenses/AGPL-3.0.html)
+- [Apache-2.0](https://spdx.org/licenses/Apache-2.0.html)
+- [BSD-2-Clause](https://spdx.org/licenses/BSD-2-Clause.html)
+- [ISC](https://spdx.org/licenses/ISC.html)
+- [MIT](https://spdx.org/licenses/MIT.html)
+- [MPL-2.0](https://spdx.org/licenses/MPL-2.0.html)
+- [Unlicense](https://spdx.org/licenses/Unlicense.html)
+
+### Known issues
+
+- placeholders including `'` character don't work
+- Regexp support for license placeholders
+- Integrate with [SPDX Templatizing efforts](https://wiki.spdx.org/view/Legal_Team/Templatizing)
