@@ -60,3 +60,4 @@ legit uses SPDX license IDs and definitions as a backend, therefore all [SPDX li
 
 - placeholders including `'` character don't work
 - Regexp support for license placeholders
+- Integrate with [SPDX Templatizing efforts](https://wiki.spdx.org/view/Legal_Team/Templatizing)
