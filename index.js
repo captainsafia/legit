@@ -29,17 +29,17 @@ function validateLicense(license) {
 
 program
   .version('1.0.0')
-  .usage('[options]')
+  .usage('[options] [key=value replacement pairs]')
   .option('-a, --list-all', 'List all SPDX license identifiers')
   .option('-l, --license <license>', 'The license to include, as an SPDX license identifier (mandatory)', validateLicense)
   .parse(process.argv);
 
-console.log(program.args);
+console.debug(program.args);
 
 if (program.license) {
   const cwd = process.cwd();
 
-  //Create a placeholders hash
+  // Create a placeholders hash
   var placeholders = {}
   program.args.forEach(function(placeholder) {
     keyValue = placeholder.split("=");
@@ -82,11 +82,11 @@ if (program.license) {
         Object.keys(placeholderItem).forEach(function(placeholderKey) {
           var placeholderToken = placeholderItem[placeholderKey];
           var placeholderValue = placeholders[placeholderKey];
-          console.log('Replacing ' + placeholderToken + ' with ' + placeholderValue + ' in LICENSE text');
-          if (placeholderValue && parsedLicenseText.indexOf(placeholderToken) > -1) {
+          console.debug('Replacing ' + placeholderToken + ' with ' + placeholderValue + ' in LICENSE text');
+          if (placeholderValue) {
             parsedLicenseText = replaceAll(placeholderToken, placeholderValue, parsedLicenseText);
           } else {
-            console.log("WARNING! Couldn't read placeholder '"+ placeholderToken +"' from command-line params");
+            console.log("WARNING! Couldn't read placeholder '" + placeholderToken + "' from command-line params");
           }
         });
       });
@@ -107,11 +107,11 @@ if (program.license) {
       var spdxLicenseText = data;
       Object.keys(placeholders).forEach(function(placeholderKey) {
         var placeholderValue = placeholders[placeholderKey];
-        var placeholderToken = '['+placeholderKey+']';
-        if (placeholderValue && spdxLicenseText.indexOf(placeholderToken) > -1) {
+        var placeholderToken = '[' + placeholderKey + ']';
+        if (placeholderValue) {
           spdxLicenseText = replaceAll(placeholderToken, placeholderValue, spdxLicenseText);
         } else {
-          console.log("WARNING! Couldn't read placeholder '"+ placeholderKey +"' from command-line params");
+          console.log("WARNING! Couldn't read placeholder '" + placeholderKey + "' from command-line params");
         }
       });
 
