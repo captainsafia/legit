@@ -62,17 +62,25 @@ if (program.license && program.user && program.name) {
       var parsedLicenseText = licenseText;
 
       placeholders = licensePlaceholders[program.license];
-      if (placeholders) {
-        placeholders.forEach(function(placeholder) {
-          Object.keys(placeholder).forEach(function(placeholderKey) {
-            var placeholderOldValue = placeholder[placeholderKey];
-            var placeholderNewValue = program[placeholderKey];
-            console.debug('Replacing ' + placeholderOldValue + ' with ' + placeholderNewValue + ' in LICENSE text');
 
-            parsedLicenseText = replaceAll(placeholderOldValue, placeholderNewValue, parsedLicenseText);
-          });
-        });
+      // Define default license header
+      if (!placeholders) {
+        parsedLicenseText = "Copyright (c) [year] [user]\n\n"+parsedLicenseText;
+        placeholders = [{
+          "user": '[user]',
+          "year": '[year]'
+        }]
       }
+
+      placeholders.forEach(function(placeholder) {
+        Object.keys(placeholder).forEach(function(placeholderKey) {
+          var placeholderOldValue = placeholder[placeholderKey];
+          var placeholderNewValue = program[placeholderKey];
+          console.debug('Replacing ' + placeholderOldValue + ' with ' + placeholderNewValue + ' in LICENSE text');
+
+          parsedLicenseText = replaceAll(placeholderOldValue, placeholderNewValue, parsedLicenseText);
+        });
+      });
 
       // Write content
       fs.writeFile(cwd + '/LICENSE', parsedLicenseText, 'utf8', function (error) {

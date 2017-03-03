@@ -1,3 +1,7 @@
+# List of placeholders resolved in SPDX licences - https://spdx.org/licenses
+#
+# Commented lines define licenses that don't include placeholders in their text
+# 
 AGPL-3.0:
 - user: '<name of author>'
 - year: '<year>'
@@ -6,3 +10,17 @@ AGPL-3.0:
 Apache-2.0:
 - user: '[name of copyright owner]'
 - year: '[yyyy]'
+
+BSD-2-Clause:
+- user: '<owner>'
+- year: '<year>'
+
+# ISC:
+
+MIT:
+- user: '<copyright holders>'
+- year: '<year>'
+
+# MPL-2.0:
+
+# Unlicense:
