@@ -5,7 +5,7 @@ const program = require('commander');
 const username = require('username');
 const placeholders = require('./placeholders');
 
-const licensesPath = __dirname + '/licenses/';
+const licensesPath = __dirname + '/../licenses/';
 
 function validateLicense(license) {
   license = license.toLowerCase();

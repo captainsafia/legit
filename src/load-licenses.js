@@ -23,7 +23,7 @@ fetch(ENDPOINT + '/licenses', options)
           return console.log(error);
         })
         .then(function(license) {
-          fs.writeFile(__dirname + '/licenses/' + license.key, license.body, function(error) {
+          fs.writeFile(__dirname + '/../licenses/' + license.key, license.body, function(error) {
             if (error) console.log(error);
           });
         });
