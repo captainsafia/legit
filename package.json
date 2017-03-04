@@ -7,7 +7,7 @@
     "legit": "src/index.js"
   },
   "scripts": {
-    "postinstall": "mkdir licenses && node src/load-licenses.js"
+    "postinstall": "mkdir -p licenses && node src/load-licenses.js"
   },
   "keywords": [
     "license",
