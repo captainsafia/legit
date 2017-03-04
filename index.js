@@ -1,50 +1,54 @@
 #! /usr/bin/env node
 
-var fs = require('fs');
-var program = require('commander');
+const fs = require('fs');
+const program = require('commander');
+const username = require('username');
+const placeholders = require('./placeholders');
+
 const licensesPath = __dirname + '/licenses/';
 
 function validateLicense(license) {
   license = license.toLowerCase();
   const licenses = fs.readdirSync(licensesPath);
-  if (licenses.indexOf(license) > -1) {
-    return license;
-  } else {
-    return 'mit';
-  }
+  return licenses.indexOf(license) > -1;
 }
 
 program
-  .version('1.0.0')
-  .usage('[options]')
-  .option('-a, --list-all', 'List installed licenses')
-  .option('-l, --license <license>', 'The license to include', validateLicense)
-  .option('-u, --user <user>', 'The individual who owns the license')
-  .option('-y, --year <year>', 'The year the license is effective')
-  .parse(process.argv);
+  .version('2.0.0')
 
+program
+  .command('list').alias('l')
+  .description('List all available licenses')
+  .action(function() {
+    fs.readdir(licensesPath, function (error, items) {
+      if (error) console.log(error);
+      items.forEach(function(item) { console.log(item); });
+    })
+  });
 
-if (program.license) {
-  const cwd = process.cwd();
-  const licenseFile = licensesPath + program.license;
-  fs.readFile(licenseFile, 'utf8', function (error, data) {
-    if (error) console.log(error);
-    if (program.user) {
-      var year = program.year || new Date().getFullYear();
-      var result = data.replace('[user]', program.user).replace('[year]', year);
-      fs.writeFile(cwd + '/LICENSE', result, 'utf8', function (error) {
+program
+  .command('put <license> [user] [year]').alias('p')
+  .description('Put a license in this directory')
+  .action(function(licenseArg, userArg, yearArg) {
+    if (!validateLicense(licenseArg)) {
+      return console.log('Please choose one of the licenses under `legit list`!');
+    }
+
+    const cwd = process.cwd();
+    const licenseFile = licensesPath + licenseArg;
+    fs.readFile(licenseFile, 'utf8', function (error, data) {
+      if (error) console.log(error);
+      yearArg = yearArg || new Date().getFullYear();
+      userArg = userArg || username.sync();
+      if (placeholders[licenseArg]) {
+        const user = placeholders[licenseArg]['user'];
+        const year = placeholders[licenseArg]['year'];
+        var result = data.replace(user, userArg).replace(year, yearArg);
+      }
+      fs.writeFile(cwd + '/LICENSE', result || data, 'utf8', function (error) {
         if (error) return console.log(error);
       });
-    } else {
-      program.help();
-    }
+    });
   });
-} else if (program.listAll) {
-  fs.readdir(licensesPath, function (err, items) {
-    for (var i = 0; i < items.length; i++) {
-      console.log(items[i]);
-    }
-  })
-} else {
-  program.help();
-}
+
+program.parse(process.argv);
