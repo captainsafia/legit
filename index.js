@@ -4,6 +4,7 @@ const fs = require('fs');
 const program = require('commander');
 const username = require('username');
 const placeholders = require('./placeholders');
+const firstCommitDate = require('first-commit-date');
 
 const licensesPath = __dirname + '/licenses/';
 
@@ -38,7 +39,17 @@ program
     const licenseFile = licensesPath + licenseArg;
     fs.readFile(licenseFile, 'utf8', function (error, data) {
       if (error) console.log(error);
-      yearArg = yearArg || new Date().getFullYear();
+      if (yearArg === "auto") {
+        var firstCommitYear = firstCommitDate.sync(cwd + '/.git').getFullYear();
+        var currentYear = new Date().getFullYear();
+        if (currentYear === firstCommitYear) {
+          yearArg = currentYear;
+        } else {
+          yearArg = firstCommitYear + "-" + currentYear;
+        }
+      } else {
+        yearArg = yearArg || new Date().getFullYear();
+      }
       userArg = userArg || username.sync();
       if (placeholders[licenseArg]) {
         const user = placeholders[licenseArg]['user'];
