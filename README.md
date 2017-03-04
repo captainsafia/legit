@@ -27,18 +27,16 @@ npm install --global @captainsafia/legit
 
 ![Legit Demo](legit-demo.gif)
 
-### Available Licenses
-
-legit currently supports a limited subset of licenses, listed below. In order
-to add a license, submit a pull request that contains a template of the license
-inside the `licenses` directory with the strings `[user]` and `[year]` used to
-denote where the parameters should be inserted.
-
-#### Currently Supported Licenses
-- MIT (mit)
-- Mozilla Public License 2.0 (mpl2)
-- Apache License 2.0 (apache2)
-- GNU Affero General Public License 3.0 (agpl3)
-- ISC License (isc)
-- BSD 2-Clause License (bsd2clause)
-- Unlicense (unlicense)
+### Currently Supported Licenses
+- BSD 2-clause Simplified License (bsd-2-clause)
+- GNU General Public License v2.0 (gpl-2.0)
+- BSD 3-clause New or Revised License (bsd-3-clause)
+- The Unlicense (unlicense)
+- GNU Lesser General Public License v2.1 (lgpl-2.0)
+- GNU General Public License v3.0 (gpl-3.0)
+- MIT License (mit)
+- GNU Affero General Public License v3.0 (agpl-3.0)
+- Eclipse Public License 1.0 (epl-1.0)
+- Apache License 2.0 (apache-2.0)
+- Mozilla Public License 2.0 (mpl-2.0)
+- GNU Lesser General Public License v3.0 (lgpl-3.0)
