@@ -12,17 +12,18 @@ npm install --global @captainsafia/legit
 ### Usage
 
 ```
-  Usage: legit [options]
+  Usage: legit [options] [command]
+
+
+  Commands:
+
+    list|l                         List all available licenses
+    put|p <license> [user] [year]  Put a license in this directory
 
   Options:
 
-    -h, --help               output usage information
-    -V, --version            output the version number
-    -a, --list-all           List installed licenses
-    -l, --license <license>  The license to include
-    -u, --user <user>        The individual who owns the license
-    -y, --year <year>        The year the license is effective
-
+    -h, --help     output usage information
+    -V, --version  output the version number
 ```
 
 ![Legit Demo](legit-demo.gif)
