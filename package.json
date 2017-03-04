@@ -4,10 +4,10 @@
   "description": "Automatically add a license to a GitHub project",
   "main": "index.js",
   "bin": {
-    "legit": "index.js"
+    "legit": "src/index.js"
   },
   "scripts": {
-    "postinstall": "mkdir licenses && node load-licenses.js"
+    "postinstall": "mkdir licenses && node src/load-licenses.js"
   },
   "keywords": [
     "license",
