@@ -19,6 +19,7 @@
   "license": "MIT",
   "dependencies": {
     "commander": "^2.9.0",
-    "node-fetch": "^1.6.3"
+    "node-fetch": "^1.6.3",
+    "username": "^2.3.0"
   }
 }
