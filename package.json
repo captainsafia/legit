@@ -22,5 +22,13 @@
     "commander": "^2.9.0",
     "node-fetch": "^1.6.3",
     "username": "^2.3.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/captainsafia/legit.git"
+  },
+  "bugs": {
+    "url": "https://github.com/captainsafia/legit/issues"
+  },
+  "homepage": "https://github.com/captainsafia/legit#readme"
 }
