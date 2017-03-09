@@ -26,7 +26,7 @@ npm install --global @captainsafia/legit
     -V, --version  output the version number
 ```
 
-![Legit Demo](legit-demo.gif)
+![Legit Demo](https://cloud.githubusercontent.com/assets/11269635/23770260/b07ef29c-0512-11e7-8c48-3fb773caad64.gif)
 
 ### Currently Supported Licenses
 - BSD 2-clause Simplified License (bsd-2-clause)
