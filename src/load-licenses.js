@@ -1,10 +1,13 @@
-const fetch = require('node-fetch');
-const fs = require('fs');
+'use strict';
 
-const ENDPOINT = "https://api.github.com";
+const fs = require('fs');
+const path = require('path');
+const fetch = require('node-fetch');
+
+const ENDPOINT = 'https://api.github.com';
 const options = {
   headers: {
-    "Accept": "application/vnd.github.drax-preview+json"
+    'Accept': 'application/vnd.github.drax-preview+json'
   }
 };
 
@@ -23,8 +26,10 @@ fetch(ENDPOINT + '/licenses', options)
           return console.log(error);
         })
         .then(function(license) {
-          fs.writeFile(__dirname + '/../licenses/' + license.key, license.body, function(error) {
-            if (error) console.log(error);
+          fs.writeFile(path.join(__dirname, '/../licenses/', license.key), license.body, function(error) {
+            if (error) {
+              console.log(error);
+            }
           });
         });
     });

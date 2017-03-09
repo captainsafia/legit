@@ -1,5 +1,7 @@
 #! /usr/bin/env node
 
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 const program = require('commander');
@@ -10,8 +12,8 @@ const commentator = require('@captainsafia/commentator');
 const licensesPath = path.join(__dirname, '/../licenses/');
 
 function validateLicense(license) {
-  license = license.toLowerCase();
   const licenses = fs.readdirSync(licensesPath);
+  license = license.toLowerCase();
   return licenses.indexOf(license) > -1;
 }
 
@@ -23,9 +25,13 @@ program
   .description('List all available licenses')
   .action(function() {
     fs.readdir(licensesPath, function (error, items) {
-      if (error) console.log(error);
-      items.forEach(function(item) { console.log(item); });
-    })
+      if (error) {
+        console.log(error);
+      }
+      items.forEach(function(item) {
+        console.log(item);
+      });
+    });
   });
 
 program
@@ -56,7 +62,9 @@ program
       }
 
       fs.readFile(headerFile, 'utf8', function(error, data) {
-        if (error) console.log(error);
+        if (error) {
+          console.log(error);
+        }
         const result = commentator.makeBlockComment(
           data.replace(user, userArg).replace(year, yearArg), fileExtension);
         const filePath = path.join(cwd, '/', fileArg);
@@ -64,19 +72,26 @@ program
         fs.readFile(filePath, 'utf8', function(error, data) {
           const newData = result + '\n' + data;
           fs.writeFile(filePath, newData, 'utf8', function(error) {
-            if (error) console.log(error);
+            if (error) {
+              console.log(error);
+            }
           });
         });
       });
     } else {
       const licenseFile = licensesPath + licenseArg;
       fs.readFile(licenseFile, 'utf8', function (error, data) {
-        if (error) console.log(error);
+        var result;
+        if (error) {
+          console.log(error);
+        }
         if (placeholders[licenseArg]) {
-          var result = data.replace(user, userArg).replace(year, yearArg);
+          result = data.replace(user, userArg).replace(year, yearArg);
         }
         fs.writeFile(path.join(cwd, '/LICENSE'), result || data, 'utf8', function (error) {
-          if (error) return console.log(error);
+          if (error) {
+            return console.log(error);
+          }
         });
       });
     }
