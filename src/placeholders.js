@@ -1,6 +1,6 @@
 const placeholders = {
   'agpl-3.0': {
-    user: '<name of author',
+    user: '<name of author>',
     year: '<year>'
   },
   'apache-2.0': {
