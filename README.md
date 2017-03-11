@@ -4,13 +4,13 @@ legit is a command line application that allows you to automagically generate a
 LICENSE file for the current working directory that you are in or a license header
 for a file where applicable.
 
-### Installation
+## Installation
 
 ```
 npm install --global @captainsafia/legit
 ```
 
-### Usage
+## Usage
 
 ```
   Usage: legit [options] [command]
@@ -40,7 +40,8 @@ npm install --global @captainsafia/legit
 
 ![Legit Demo](https://cloud.githubusercontent.com/assets/1857993/23821404/bea5dfc2-05f6-11e7-8525-7f5bd88a7829.gif)
 
-### Currently Supported Licenses
+## Currently Supported Licenses
+
 - BSD 2-clause Simplified License (bsd-2-clause)
 - GNU General Public License v2.0 (gpl-2.0)
 - BSD 3-clause New or Revised License (bsd-3-clause)

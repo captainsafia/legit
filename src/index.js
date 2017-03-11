@@ -1,5 +1,7 @@
 #! /usr/bin/env node
 
+'use strict';
+
 const fs = require('fs');
 const path = require('path');
 const program = require('commander');
@@ -10,9 +12,9 @@ const commentator = require('@captainsafia/commentator');
 const licensesPath = path.join(__dirname, '/../licenses/');
 
 function validateLicense(license) {
-  license = license.toLowerCase();
   const licenses = fs.readdirSync(licensesPath);
-  return licenses.indexOf(license) > -1;
+  license = license.toLowerCase();
+  return licenses.includes(license);
 }
 
 program
@@ -21,11 +23,15 @@ program
 program
   .command('list').alias('l')
   .description('List all available licenses')
-  .action(function() {
-    fs.readdir(licensesPath, function (error, items) {
-      if (error) console.log(error);
-      items.forEach(function(item) { console.log(item); });
-    })
+  .action(() => {
+    fs.readdir(licensesPath, (error, items) => {
+      if (error) {
+        console.log(error);
+      }
+      items.forEach(item => {
+        console.log(item);
+      });
+    });
   });
 
 program
@@ -55,28 +61,37 @@ program
         console.log('Header not available for', licenseArg, 'license');
       }
 
-      fs.readFile(headerFile, 'utf8', function(error, data) {
-        if (error) console.log(error);
+      fs.readFile(headerFile, 'utf8', (error, data) => {
+        if (error) {
+          console.log(error);
+        }
         const result = commentator.makeBlockComment(
           data.replace(user, userArg).replace(year, yearArg), fileExtension);
         const filePath = path.join(cwd, '/', fileArg);
 
-        fs.readFile(filePath, 'utf8', function(error, data) {
-          const newData = result + '\n' + data;
-          fs.writeFile(filePath, newData, 'utf8', function(error) {
-            if (error) console.log(error);
+        fs.readFile(filePath, 'utf8', (error, data) => {
+          const newData = `${result}\n${data}`;
+          fs.writeFile(filePath, newData, 'utf8', error => {
+            if (error) {
+              console.log(error);
+            }
           });
         });
       });
     } else {
       const licenseFile = licensesPath + licenseArg;
-      fs.readFile(licenseFile, 'utf8', function (error, data) {
-        if (error) console.log(error);
-        if (placeholders[licenseArg]) {
-          var result = data.replace(user, userArg).replace(year, yearArg);
+      fs.readFile(licenseFile, 'utf8', (error, data) => {
+        let result;
+        if (error) {
+          console.log(error);
         }
-        fs.writeFile(path.join(cwd, '/LICENSE'), result || data, 'utf8', function (error) {
-          if (error) return console.log(error);
+        if (placeholders[licenseArg]) {
+          result = data.replace(user, userArg).replace(year, yearArg);
+        }
+        fs.writeFile(path.join(cwd, '/LICENSE'), result || data, 'utf8', error => {
+          if (error) {
+            return console.log(error);
+          }
         });
       });
     }

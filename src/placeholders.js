@@ -1,3 +1,5 @@
+'use strict';
+
 const placeholders = {
   'agpl-3.0': {
     user: '<name of author>',
@@ -25,12 +27,12 @@ const placeholders = {
   },
   'lgpl-2.1': {
     user: '{fullname}',
-    year: '{year}', 
+    year: '{year}'
   },
   'mit': {
     user: '[fullname]',
     year: '[year]'
   }
-}
+};
 
 module.exports = placeholders;
