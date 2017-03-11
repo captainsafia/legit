@@ -1,11 +1,13 @@
 #! /usr/bin/env node
 
 const fs = require('fs');
+const path = require('path');
 const program = require('commander');
 const username = require('username');
 const placeholders = require('./placeholders');
+const commentator = require('@captainsafia/commentator');
 
-const licensesPath = __dirname + '/../licenses/';
+const licensesPath = path.join(__dirname, '/../licenses/');
 
 function validateLicense(license) {
   license = license.toLowerCase();
@@ -14,7 +16,7 @@ function validateLicense(license) {
 }
 
 program
-  .version('2.0.0')
+  .version('2.0.0');
 
 program
   .command('list').alias('l')
@@ -27,28 +29,57 @@ program
   });
 
 program
-  .command('put <license> [user] [year]').alias('p')
+  .command('put <license>').alias('p')
+  .option('-f --file <file>', 'The file to add a header to')
+  .option('-u --user [user]', 'The user/organization who holds the license')
+  .option('-y --year [year]', 'The year the license is in effect')
   .description('Put a license in this directory')
-  .action(function(licenseArg, userArg, yearArg) {
+  .action(function(licenseArg) {
+    const fileArg = this.file;
+    const yearArg = this.year || new Date().getFullYear();
+    const userArg = this.user || username.sync();
+
+    const user = placeholders[licenseArg]['user'];
+    const year = placeholders[licenseArg]['year'];
+
+    const cwd = process.cwd();
+
     if (!validateLicense(licenseArg)) {
       return console.log('Please choose one of the licenses under `legit list`!');
     }
 
-    const cwd = process.cwd();
-    const licenseFile = licensesPath + licenseArg;
-    fs.readFile(licenseFile, 'utf8', function (error, data) {
-      if (error) console.log(error);
-      yearArg = yearArg || new Date().getFullYear();
-      userArg = userArg || username.sync();
-      if (placeholders[licenseArg]) {
-        const user = placeholders[licenseArg]['user'];
-        const year = placeholders[licenseArg]['year'];
-        var result = data.replace(user, userArg).replace(year, yearArg);
+    if (fileArg) {
+      const headerFile = path.join(__dirname, '/../licenses/headers/', licenseArg);
+      const fileExtension = fileArg.split('.').pop();
+      if (!fs.existsSync(headerFile)) {
+        console.log('Header not available for', licenseArg, 'license');
       }
-      fs.writeFile(cwd + '/LICENSE', result || data, 'utf8', function (error) {
-        if (error) return console.log(error);
+
+      fs.readFile(headerFile, 'utf8', function(error, data) {
+        if (error) console.log(error);
+        const result = commentator.makeBlockComment(
+          data.replace(user, userArg).replace(year, yearArg), fileExtension);
+        const filePath = path.join(cwd, '/', fileArg);
+
+        fs.readFile(filePath, 'utf8', function(error, data) {
+          const newData = result + '\n' + data;
+          fs.writeFile(filePath, newData, 'utf8', function(error) {
+            if (error) console.log(error);
+          });
+        });
       });
-    });
+    } else {
+      const licenseFile = licensesPath + licenseArg;
+      fs.readFile(licenseFile, 'utf8', function (error, data) {
+        if (error) console.log(error);
+        if (placeholders[licenseArg]) {
+          var result = data.replace(user, userArg).replace(year, yearArg);
+        }
+        fs.writeFile(path.join(cwd, '/LICENSE'), result || data, 'utf8', function (error) {
+          if (error) return console.log(error);
+        });
+      });
+    }
   });
 
 program.parse(process.argv);
