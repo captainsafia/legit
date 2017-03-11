@@ -30,7 +30,7 @@ program
 
 program
   .command('put <license>').alias('p')
-  .option('-f --file <file>', 'The file to add a header to')
+  .option('-f --file [file]', 'The file to add a header to')
   .option('-u --user [user]', 'The user/organization who holds the license')
   .option('-y --year [year]', 'The year the license is in effect')
   .description('Put a license in this directory')
