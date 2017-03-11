@@ -59,13 +59,20 @@ program
         if (error) console.log(error);
 
         try {
-          const result = commentator.makeBlockComment(
+          var result = commentator.makeBlockComment(
             data.replace(user, userArg).replace(year, yearArg), fileExtension);
         } catch (error) {
           if (error.message.includes('Block comment')) {
-            return console.log('@captainsafia/commentator doesn\'t support block comments',
-              'for files with this extension, please open an issue at https://github.com/captainsafia/commentator/issues',
-              'to add support for this programming language.');
+            try {
+            var result = commentator.makeInlineComment(
+              data.replace(user, userArg).replace(year, yearArg), fileExtension);
+            } catch(error) {
+              if (error.message.includes('Inline comment')) {
+                return console.log('@captainsafia/commentator doesn\'t support block comments',
+                  'for files with this extension, please open an issue at https://github.com/captainsafia/commentator/issues',
+                  'to add support for this programming language.');
+              }
+            }
           }
         }
 
