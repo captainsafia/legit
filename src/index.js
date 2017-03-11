@@ -57,8 +57,18 @@ program
 
       fs.readFile(headerFile, 'utf8', function(error, data) {
         if (error) console.log(error);
-        const result = commentator.makeBlockComment(
-          data.replace(user, userArg).replace(year, yearArg), fileExtension);
+
+        try {
+          const result = commentator.makeBlockComment(
+            data.replace(user, userArg).replace(year, yearArg), fileExtension);
+        } catch (error) {
+          if (error.message.includes('Block comment')) {
+            return console.log('@captainsafia/commentator doesn\'t support block comments',
+              'for files with this extension, please open an issue at https://github.com/captainsafia/commentator/issues',
+              'to add support for this programming language.');
+          }
+        }
+
         const filePath = path.join(cwd, '/', fileArg);
 
         fs.readFile(filePath, 'utf8', function(error, data) {
