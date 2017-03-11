@@ -7,6 +7,7 @@
     "legit": "src/index.js"
   },
   "scripts": {
+    "prepublish": "find licenses -type f -maxdepth 1 -delete",
     "postinstall": "node src/load-licenses.js"
   },
   "keywords": [
