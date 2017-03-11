@@ -18,7 +18,7 @@
   "author": "Safia Abdalla <safia@safia.rocks>",
   "license": "MIT",
   "dependencies": {
-    "@captainsafia/commentator": "^1.0.1",
+    "@captainsafia/commentator": "^1.1.0",
     "commander": "^2.9.0",
     "node-fetch": "^1.6.3",
     "username": "^2.3.0"
