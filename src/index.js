@@ -52,19 +52,20 @@ program
       const headerFile = path.join(__dirname, '/../licenses/headers/', licenseArg);
       const fileExtension = fileArg.split('.').pop();
       if (!fs.existsSync(headerFile)) {
-        console.log('Header not available for', licenseArg, 'license');
+        return console.log('Header not available for', licenseArg, 'license!');
       }
 
       fs.readFile(headerFile, 'utf8', function(error, data) {
-        if (error) console.log(error);
+        if (error) return console.log(error);
+        var result;
 
         try {
-          var result = commentator.makeBlockComment(
+          result = commentator.makeBlockComment(
             data.replace(user, userArg).replace(year, yearArg), fileExtension);
         } catch (error) {
           if (error.message.includes('Block comment')) {
             try {
-            var result = commentator.makeInlineComment(
+            result = commentator.makeInlineComment(
               data.replace(user, userArg).replace(year, yearArg), fileExtension);
             } catch(error) {
               if (error.message.includes('Inline comment')) {
@@ -81,14 +82,14 @@ program
         fs.readFile(filePath, 'utf8', function(error, data) {
           const newData = result + '\n' + data;
           fs.writeFile(filePath, newData, 'utf8', function(error) {
-            if (error) console.log(error);
+            if (error) return console.log(error);
           });
         });
       });
     } else {
       const licenseFile = licensesPath + licenseArg;
       fs.readFile(licenseFile, 'utf8', function (error, data) {
-        if (error) console.log(error);
+        if (error) return console.log(error);
         if (placeholders[licenseArg]) {
           var result = data.replace(user, userArg).replace(year, yearArg);
         }
