@@ -14,7 +14,7 @@ const licensesPath = path.join(__dirname, '/../licenses/');
 function validateLicense(license) {
   const licenses = fs.readdirSync(licensesPath);
   license = license.toLowerCase();
-  return licenses.indexOf(license) > -1;
+  return licenses.includes(license);
 }
 
 program
@@ -23,12 +23,12 @@ program
 program
   .command('list').alias('l')
   .description('List all available licenses')
-  .action(function() {
-    fs.readdir(licensesPath, function (error, items) {
+  .action(() => {
+    fs.readdir(licensesPath, (error, items) => {
       if (error) {
         console.log(error);
       }
-      items.forEach(function(item) {
+      items.forEach(item => {
         console.log(item);
       });
     });
@@ -61,7 +61,7 @@ program
         console.log('Header not available for', licenseArg, 'license');
       }
 
-      fs.readFile(headerFile, 'utf8', function(error, data) {
+      fs.readFile(headerFile, 'utf8', (error, data) => {
         if (error) {
           console.log(error);
         }
@@ -69,9 +69,9 @@ program
           data.replace(user, userArg).replace(year, yearArg), fileExtension);
         const filePath = path.join(cwd, '/', fileArg);
 
-        fs.readFile(filePath, 'utf8', function(error, data) {
-          const newData = result + '\n' + data;
-          fs.writeFile(filePath, newData, 'utf8', function(error) {
+        fs.readFile(filePath, 'utf8', (error, data) => {
+          const newData = `${result}\n${data}`;
+          fs.writeFile(filePath, newData, 'utf8', error => {
             if (error) {
               console.log(error);
             }
@@ -80,15 +80,15 @@ program
       });
     } else {
       const licenseFile = licensesPath + licenseArg;
-      fs.readFile(licenseFile, 'utf8', function (error, data) {
-        var result;
+      fs.readFile(licenseFile, 'utf8', (error, data) => {
+        let result;
         if (error) {
           console.log(error);
         }
         if (placeholders[licenseArg]) {
           result = data.replace(user, userArg).replace(year, yearArg);
         }
-        fs.writeFile(path.join(cwd, '/LICENSE'), result || data, 'utf8', function (error) {
+        fs.writeFile(path.join(cwd, '/LICENSE'), result || data, 'utf8', error => {
           if (error) {
             return console.log(error);
           }

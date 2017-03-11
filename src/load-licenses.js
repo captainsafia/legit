@@ -11,22 +11,14 @@ const options = {
   }
 };
 
-fetch(ENDPOINT + '/licenses', options)
-  .then(function(response) {
-    return response.json();
-  }, function(error) {
-    return console.log(error);
-  })
-  .then(function(licenses) {
-    licenses.forEach(function(license) {
-      fetch(ENDPOINT + '/licenses/' + license.key, options)
-        .then(function(response) {
-          return response.json();
-        }, function(error) {
-          return console.log(error);
-        })
-        .then(function(license) {
-          fs.writeFile(path.join(__dirname, '/../licenses/', license.key), license.body, function(error) {
+fetch(`${ENDPOINT}/licenses`, options)
+  .then(response => response.json(), error => console.log(error))
+  .then(licenses => {
+    licenses.forEach(license => {
+      fetch(`${ENDPOINT}/licenses/${license.key}`, options)
+        .then(response => response.json(), error => console.log(error))
+        .then(license => {
+          fs.writeFile(path.join(__dirname, '/../licenses/', license.key), license.body, error => {
             if (error) {
               console.log(error);
             }
