@@ -41,7 +41,7 @@ program
     var yearArg;
     const userArg = this.user || username.sync();
 
-    if (this.year === "auto") {
+    if (this.year === "range") {
       var firstCommitYear = firstCommitDate.sync(cwd + '/.git').getFullYear();
       var currentYear = new Date().getFullYear();
       if (currentYear === firstCommitYear) {
