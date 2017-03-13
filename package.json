@@ -1,6 +1,6 @@
 {
   "name": "@captainsafia/legit",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Automatically add a license to a GitHub project",
   "main": "index.js",
   "bin": {
