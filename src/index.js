@@ -34,14 +34,15 @@ program
   .option('-f --file [file]', 'The file to add a header to')
   .option('-u --user [user]', 'The user/organization who holds the license')
   .option('-y --year [year]', 'The year the license is in effect')
+  .option('-r --range', 'Year range from first commit year to current year.')
   .description('Put a license in this directory')
   .action(function(licenseArg) {
     const cwd = process.cwd();
     const fileArg = this.file;
-    var yearArg;
     const userArg = this.user || username.sync();
+    var   yearArg = this.year || new Date().getFullYear();
 
-    if (this.year === "range") {
+    if (this.range) {
       var firstCommitYear = firstCommitDate.sync(cwd + '/.git').getFullYear();
       var currentYear = new Date().getFullYear();
       if (currentYear === firstCommitYear) {
@@ -49,8 +50,6 @@ program
       } else {
         yearArg = firstCommitYear + "-" + currentYear;
       }
-    } else {
-      yearArg = this.year || new Date().getFullYear();
     }
 
     const user = placeholders[licenseArg]['user'];

@@ -36,8 +36,8 @@ npm install --global @captainsafia/legit
     -f --file <file>  The file to add a header to
     -u --user [user]  The user/organization who holds the license
     -y --year [year]  The year the license is in effect. 
-                      If 'range' is used in place of a year, a date range from the first commit year 
-                      to the current year will be used.
+    -r --range        Year range from first commit year to current year. 
+                      Takes precedence over -y/--year.
 ```
 
 ![Legit Demo](https://cloud.githubusercontent.com/assets/1857993/23821404/bea5dfc2-05f6-11e7-8525-7f5bd88a7829.gif)
