@@ -6,6 +6,7 @@ const program = require('commander');
 const username = require('username');
 const placeholders = require('./placeholders');
 const commentator = require('@captainsafia/commentator');
+const firstCommitDate = require('first-commit-date');
 
 const licensesPath = path.join(__dirname, '/../licenses/');
 
@@ -16,7 +17,7 @@ function validateLicense(license) {
 }
 
 program
-  .version('2.0.0');
+  .version('3.0.2');
 
 program
   .command('list').alias('l')
@@ -33,16 +34,30 @@ program
   .option('-f --file [file]', 'The file to add a header to')
   .option('-u --user [user]', 'The user/organization who holds the license')
   .option('-y --year [year]', 'The year the license is in effect')
+  .option('-r --range', 'Year range from first commit year to current year.')
   .description('Put a license in this directory')
   .action(function(licenseArg) {
+    const cwd = process.cwd();
     const fileArg = this.file;
-    const yearArg = this.year || new Date().getFullYear();
     const userArg = this.user || username.sync();
+    var   yearArg = this.year || new Date().getFullYear();
+
+    if (this.range) {
+      try {
+        var firstCommitYear = firstCommitDate.sync(cwd + '/.git').getFullYear();
+        var currentYear = new Date().getFullYear();
+        if (currentYear === firstCommitYear) {
+          yearArg = currentYear;
+        } else {
+          yearArg = firstCommitYear + "-" + currentYear;
+        }
+      } catch (error) {
+        console.log('git repository not found in this directory. Using', yearArg, 'as year.');
+      }
+    }
 
     const user = placeholders[licenseArg]['user'];
     const year = placeholders[licenseArg]['year'];
-
-    const cwd = process.cwd();
 
     if (!validateLicense(licenseArg)) {
       return console.log('Please choose one of the licenses under `legit list`!');

@@ -1,6 +1,6 @@
 {
   "name": "@captainsafia/legit",
-  "version": "3.0.0",
+  "version": "3.0.2",
   "description": "Automatically add a license to a GitHub project",
   "main": "index.js",
   "bin": {
@@ -22,6 +22,7 @@
     "@captainsafia/commentator": "^1.1.0",
     "commander": "^2.9.0",
     "node-fetch": "^1.6.3",
-    "username": "^2.3.0"
+    "username": "^2.3.0",
+    "first-commit-date": "^0.2.0"
   }
 }
