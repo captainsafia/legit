@@ -43,12 +43,16 @@ program
     var   yearArg = this.year || new Date().getFullYear();
 
     if (this.range) {
-      var firstCommitYear = firstCommitDate.sync(cwd + '/.git').getFullYear();
-      var currentYear = new Date().getFullYear();
-      if (currentYear === firstCommitYear) {
-        yearArg = currentYear;
-      } else {
-        yearArg = firstCommitYear + "-" + currentYear;
+      try {
+        var firstCommitYear = firstCommitDate.sync(cwd + '/.git').getFullYear();
+        var currentYear = new Date().getFullYear();
+        if (currentYear === firstCommitYear) {
+          yearArg = currentYear;
+        } else {
+          yearArg = firstCommitYear + "-" + currentYear;
+        }
+      } catch (error) {
+        console.log('git repository not found in this directory. Using', yearArg, 'as year.');
       }
     }
 

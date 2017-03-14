@@ -38,6 +38,7 @@ npm install --global @captainsafia/legit
     -y --year [year]  The year the license is in effect. 
     -r --range        Year range from first commit year to current year. 
                       Takes precedence over -y/--year.
+                      Will fall back to default year if git repo is not found in current directory.
 ```
 
 ![Legit Demo](https://cloud.githubusercontent.com/assets/1857993/23821404/bea5dfc2-05f6-11e7-8525-7f5bd88a7829.gif)
