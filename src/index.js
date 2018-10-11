@@ -3,9 +3,11 @@
 const fs = require('fs');
 const path = require('path');
 const program = require('commander');
+const fullname = require('fullname');
 const username = require('username');
 const placeholders = require('./placeholders');
 const commentator = require('@captainsafia/commentator');
+const packageInfo = require('../package.json');
 
 const licensesPath = path.join(__dirname, '/../licenses/');
 
@@ -16,7 +18,7 @@ function validateLicense(license) {
 }
 
 program
-  .version('2.0.0');
+  .version(packageInfo.version);
 
 program
   .command('list').alias('l')
@@ -34,10 +36,10 @@ program
   .option('-u --user [user]', 'The user/organization who holds the license')
   .option('-y --year [year]', 'The year the license is in effect')
   .description('Put a license in this directory')
-  .action(function(licenseArg) {
+  .action(async function(licenseArg) {
     const fileArg = this.file;
     const yearArg = this.year || new Date().getFullYear();
-    const userArg = this.user || username.sync();
+    const userArg = this.user || await fullname() || username.sync();
 
     const user = placeholders[licenseArg]['user'];
     const year = placeholders[licenseArg]['year'];
