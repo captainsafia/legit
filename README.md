@@ -53,3 +53,4 @@ npm install --global @captainsafia/legit
 - Apache License 2.0 (apache-2.0)
 - Mozilla Public License 2.0 (mpl-2.0)
 - GNU Lesser General Public License v3.0 (lgpl-3.0)
+- ISC License (ics)
