@@ -1,0 +1,25 @@
+name: legit
+base: core18 # the base snap is the execution environment for this snap
+version: git
+summary: Add licenses to projects at the command line 
+description: |
+  legit is a command line application that allows you to automagically generate 
+  a LICENSE file for the current working directory that you are in or a license 
+  header for a file where applicable.
+
+grade: stable
+confinement: strict
+
+parts:
+  legit:
+    plugin: nodejs
+    source: .
+
+
+apps:
+  legit:
+    command: legit
+    plugs:
+      - home
+      - removable-media
+      - network
